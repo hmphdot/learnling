@@ -5,4 +5,4 @@ Study pet that sits on your desktop and quizzes you on a given topic, making sur
 Kali Palpal-latoc  
 Daniel Yoo  
 Harry Park  
-Nathan Apuyan  
+Nathan Apuyan  hi
