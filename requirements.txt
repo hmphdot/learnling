@@ -1,1 +1,3 @@
-to be determined
+google-genai
+python-dotenv
+black
