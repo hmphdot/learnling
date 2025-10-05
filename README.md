@@ -3,7 +3,7 @@ Study pet that sits on your desktop and quizzes you on a given topic, making sur
 
 ## requirements
 pip install -r requirements.txt  
-requires a working TeX install
+requires a working TeX install  
 .env file with gemini key formatted -> GEMINI_API_KEY=''  
 
 ## participants - Pixel Pilots
