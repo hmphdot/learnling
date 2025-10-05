@@ -1,7 +1,6 @@
 from google import genai
 from google.genai import types
 from dotenv import load_dotenv
-import visualization
 
 # get env variables, edit tex stuff
 load_dotenv()
@@ -9,7 +8,7 @@ client = genai.Client()
 
 def generate_question(course: str, unit: str) -> str:
     qna = "Course: " + course + ", Unit: " + unit
-    input_params = "Create a question that can be solved in 3 minutes for someone currently studying the following topics, returning only the question string. It should be written in LaTeX notation if involving equations. -> " + qna
+    input_params = "Create a question that can be solved in 3 minutes for someone currently studying the following topics, returning only the question string. -> " + qna
     question = client.models.generate_content(
         model="gemini-2.5-flash", contents=input_params
     )
