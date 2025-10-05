@@ -3,4 +3,4 @@ python-dotenv
 black
 matplotlib
 PyQt6
-texlive-full
+pillow
