@@ -66,7 +66,7 @@ def textPanel(image_path):
     }
 
 
-def show_gravestone(x=200, y=200):
+def show_gravestone(x, y, multi):
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     gravestone_path = os.path.join(BASE_DIR, "visuals", "statics", "gravestone.png")
 
@@ -78,7 +78,7 @@ def show_gravestone(x=200, y=200):
     label = QLabel(window)
     label.setPixmap(pixmap)
     window.resize(pixmap.size())
-    window.move(x, y)
+    window.move(x - 15*multi, y)
     window.show()
 
     return {
@@ -87,8 +87,7 @@ def show_gravestone(x=200, y=200):
         "pixmap": pixmap
     }
 
-
-def spawn_gravestone(x=500, y=200, multiplier=1.5):
+def spawn_gravestone(x, y, multiplier):
     global gravestones
 
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))

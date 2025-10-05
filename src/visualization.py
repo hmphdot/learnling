@@ -18,14 +18,14 @@ from PIL import Image, ImageTk
 frame_index = 0
 death_index = 0
 frame_delay = 100
-death_delay = 1000
+death_delay = 10000
 # tk settings
 root = tk.Tk()
 root.config(bg="lightblue")
 root.overrideredirect(True)
 #root.attributes('-alpha', 0.3)
 root.attributes("-topmost", True)
-root.wm_attributes('-transparentcolor', 'black')
+# root.wm_attributes('-transparentcolor', 'black')
 root.geometry("+1780+900")
 
 # load images

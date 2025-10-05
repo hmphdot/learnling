@@ -41,12 +41,12 @@ class question_dialogue(QDialog):
     def __init__(self, prompt="Enter something:"):
         super().__init__()
         self.setWindowTitle("Question:")
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.Dialog)
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Dialog)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
         # Layout
         layout = QVBoxLayout()
         self.setLayout(layout)
-        self.setGeometry(820, 360, 90, 200)
+        self.setGeometry(710, 400, 200, 200)
         
         # Prompt label
         self.label = QLabel(prompt)
@@ -74,20 +74,3 @@ class question_dialogue(QDialog):
         """Display the dialog modally and return the entered text."""
         self.exec()
         return self.user_input
-    
-class correct_dialogue(QDialog):
-    def __init__(self, prompt="Enter something:"):
-        super().__init__()
-        self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.Dialog)
-        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
-        # Layout
-        layout = QVBoxLayout()
-        self.setLayout(layout)
-        self.setGeometry(820, 360, 90, 200)
-
-        # Prompt label
-        self.label = QLabel("Correct!")
-        font = QFont()
-        font.setPointSize(20)
-        self.label.setFont(font)
-        layout.addWidget(self.label)
