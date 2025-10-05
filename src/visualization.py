@@ -58,12 +58,11 @@ def start_fish() -> None:
 
 def fish_death() -> None:
     global death_index
-    if death_index == len(death_frames):
-        death_index = 0
     label.config(image=death_frames[death_index])
     death_index += 1
     if death_index < len(frames):
         root.after(frame_delay, fish_death)
     else:
+        death_index = 0
         root.after(frame_delay, root.destroy)
     start_fish()
