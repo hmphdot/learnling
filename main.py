@@ -1,4 +1,5 @@
 from src import ai, visualization
+import os
 
 # initialization
 # wait timer
