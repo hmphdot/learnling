@@ -1,4 +1,5 @@
 import os
+from multiprocessing import Process
 import tkinter as tk
 from PIL import Image, ImageTk
 import matplotlib
@@ -12,32 +13,36 @@ fig, ax = plt.subplots()
 ax.axis('off')
 manager = fig.canvas.manager
 manager.set_window_title("Question Time!")
-manager.window.setGeometry(1200, 630, 500, 200)
+manager.window.setGeometry(1100, 630, 500, 200)
 
-# tkinter initialization
-frame_folder = "live_frames"
+# tkinter initialization - general settings
 frame_index = 0
 frame_delay = 100
+# tk settings
 TRANSPARENT_COLOR = "black"
 root = tk.Tk()
 root.overrideredirect(True)
 root.wm_attributes("-topmost", True)
 root.attributes('-alpha', 0.5)
 root.geometry("+1780+900")
-frames = []
-for file in sorted(os.listdir(frame_folder)):
-    if file.endswith(".png"):
-        path = os.path.join(frame_folder, file)
-        img = Image.open(path).convert("RGBA")
-        frames.append(ImageTk.PhotoImage(img))
-death_index = 0
-death_frames = []
-frame_folder = "death_frames"
-for file in sorted(os.listdir(frame_folder)):
-    if file.endswith(".png"):
-        path = os.path.join(frame_folder, file)
-        img = Image.open(path).convert("RGBA")
-        frames.append(ImageTk.PhotoImage(img))
+
+# load images
+life_path = os.path.join("visuals", "life")
+death_path = os.path.join("visuals", "death")
+tomb_path = os.path.join("visuals", "tomb")
+paths = [life_path, death_path, tomb_path]
+all_frames = list()
+for i in paths:
+    frames = []
+    for file in sorted(os.listdir(i)):
+        if file.endswith(".png"):
+            path = os.path.join(i, file)
+            img = Image.open(path).convert("RGBA")
+            frames.append(ImageTk.PhotoImage(img))
+    all_frames.append(frames)
+fish_frames = all_frames[0]
+death_frames = all_frames[1]
+tomb_frames = all_frames[2]
 label = tk.Label(root, bg=TRANSPARENT_COLOR)
 label.pack()
 
@@ -46,23 +51,22 @@ def display_question(question: str) -> None:
     plt.show()
     
 # below will be for fish -> needs testing
-def fish_update() -> None:
+def update_life() -> None:
     global frame_index
-    label.config(image=frames[frame_index])
-    frame_index = (frame_index + 1) % len(frames)
-    root.after(frame_delay, fish_update)
+    label.config(image=fish_frames[frame_index]) 
+    frame_index = (frame_index + 1) % len(fish_frames)
+    root.after(frame_delay, update_life)
     
-def start_fish() -> None:
-    fish_update()
-    root.mainloop()
-
-def fish_death() -> None:
-    global death_index
-    label.config(image=death_frames[death_index])
-    death_index += 1
-    if death_index < len(frames):
-        root.after(frame_delay, fish_death)
+def update_death() -> None:
+    global frame_index
+    label.config(image=death_frames[frame_index])
+    frame_index += 1
+    if frame_index < len(frames):
+        root.after(frame_delay, update_death)
     else:
-        death_index = 0
-        root.after(frame_delay, root.destroy)
-    start_fish()
+        frame_index = 0
+        root.after(frame_delay, root.quit)
+    
+def stop(root) -> None:
+    if root is not None:
+        root.quit()
