@@ -21,11 +21,10 @@ frame_delay = 100
 death_delay = 1000
 # tk settings
 root = tk.Tk()
-root.config(bg="black")
+root.config(bg="lightblue")
 root.overrideredirect(True)
 root.attributes('-alpha', 0.3)
 root.attributes("-topmost", True)
-root.wm_attributes("-transparentcolor", "black")
 root.geometry("+1780+900")
 
 # load images
