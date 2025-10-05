@@ -29,8 +29,7 @@ root.geometry("+1780+900")
 # load images
 life_path = os.path.join("visuals", "life")
 death_path = os.path.join("visuals", "death")
-tomb_path = os.path.join("visuals", "tomb")
-paths = [life_path, death_path, tomb_path]
+paths = [life_path, death_path]
 all_frames = list()
 for i in paths:
     frames = []
@@ -42,7 +41,6 @@ for i in paths:
     all_frames.append(frames)
 fish_frames = all_frames[0]
 death_frames = all_frames[1]
-tomb_frames = all_frames[2]
 label = tk.Label(root, bg=TRANSPARENT_COLOR)
 label.pack()
 
