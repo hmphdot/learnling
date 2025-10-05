@@ -1,113 +1,76 @@
+# input_window.py
+from PyQt6.QtWidgets import QDialog, QVBoxLayout, QLabel, QLineEdit, QPushButton
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont
 import sys
-from PyQt6.QtWidgets import QApplication, QWidget, QVBoxLayout, QTextEdit, QLineEdit, QPushButton
-from PyQt6.QtCore import QTimer
 
-miliToSec = 1000
-answerTimer = 5
-secToMin = 60
-quizLoopTimer = 25
-course = ""
-units = []
-studyDuration = 0
-currentUnit = 0
-loopCount = 0
-totalLoops = 0
-currentState = "init_course"
+class InputDialog(QDialog):
+    def __init__(self, prompt="Enter something:"):
+        super().__init__()
+        self.setWindowTitle("Input Dialog")
+        # Layout
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+        self.setGeometry(1200, 880, 500, 15)
+        
+        # Prompt label
+        self.label = QLabel(prompt)
+        layout.addWidget(self.label)
+        # Input box
+        self.input = QLineEdit()
+        layout.addWidget(self.input)
+        # Submit button
+        self.button = QPushButton("Submit")
+        layout.addWidget(self.button)
+        self.button.clicked.connect(self.accept_input)
+        # Store user input
+        self.user_input = None
 
-app = QApplication(sys.argv)
-window = QWidget()
-boxLayout = QVBoxLayout()
-inputBox = QLineEdit()
+    def accept_input(self):
+        text = self.input.text().strip()
+        if text:
+            self.user_input = text
+            self.accept()  # closes the dialog and returns control to caller
 
-def displayText(titleText):
-    window.setWindowTitle(titleText)
-    inputBox.clear()
+    def get_input(self):
+        """Display the dialog modally and return the entered text."""
+        self.exec()
+        return self.user_input
 
-def inputProcessing():
-    global course, units, studyDuration, currentState, totalLoops, loopCount, currentUnit
+class question_dialogue(QDialog):
+    def __init__(self, prompt="Enter something:"):
+        super().__init__()
+        self.setWindowTitle("Question:")
+        self.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.Dialog)
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
+        # Layout
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+        self.setGeometry(700, 400, 200, 400)
+        
+        # Prompt label
+        self.label = QLabel(prompt)
+        font = QFont()
+        font.setPointSize(20)
+        self.label.setFont(font)
+        layout.addWidget(self.label)
+        # Input box
+        self.input = QLineEdit()
+        layout.addWidget(self.input)
+        # Submit button
+        self.button = QPushButton("Submit")
+        layout.addWidget(self.button)
+        self.button.clicked.connect(self.accept_input)
+        # Store user input
+        self.user_input = None
 
-    userInput = inputBox.text().strip()
-    if not userInput:
-        return
+    def accept_input(self):
+        text = self.input.text().strip()
+        if text:
+            self.user_input = text
+            self.accept()  # closes the dialog and returns control to caller
 
-    if currentState == "init_course":
-        course = userInput
-        currentState = "init_units"
-        displayText(f"Which units would you like to study? (Use ,)")
-
-    elif currentState == "init_units":
-        units[:] = [u.strip() for u in userInput.split(",") if u.strip()]
-        currentState = "init_time"
-        displayText("How long do you want to study for? (Minutes)")
-
-    elif currentState == "init_time":
-        try:
-            studyDurationValue = int(userInput)
-            if studyDurationValue < quizLoopTimer:
-                displayText("Oh hell naw, study longer!")
-                return
-            studyDuration = studyDurationValue
-            totalLoops = studyDuration // quizLoopTimer
-            loopCount = 0
-            currentState = "studying"
-            studyTimer()
-        except ValueError:
-            displayText("Please enter a valid number")
-
-    elif currentState == "quiz":
-        inputHandler(userInput)
-
-def studyTimer():
-    global studyTimerValue
-    studyTimerValue = QTimer()
-    studyTimerValue.setSingleShot(True)
-    studyTimerValue.timeout.connect(unitQuestion)
-    studyTimerValue.start(quizLoopTimer * secToMin * miliToSec)  # 25 mins in miliseconds
-
-def unitQuestion():
-    global loopCount, totalLoops, currentUnit, currentState, units, answerTimerValue
-
-    if loopCount >= totalLoops:
-        displayText("Good job keeping me alive!")
-        currentState = "done"
-        return
-
-    if currentUnit >= len(units):
-        currentUnit = 0
-
-    unitName = units[currentUnit]
-    displayText(f"Psssst question time!")
-    currentState = "quiz"
-
-    global answerTimerValue
-    answerTimerValue = QTimer()
-    answerTimerValue.setSingleShot(True)
-    answerTimerValue.timeout.connect(noTime)
-    answerTimerValue.start(answerTimer * secToMin * miliToSec)  # 5 mins in miliseconds
-
-def inputHandler(userInput):
-    global loopCount, currentUnit, currentState, answerTimerValue
-    answerTimerValue.stop()
-    loopCount += 1
-    currentUnit += 1
-    currentState = "studying"
-    studyTimer()
-
-def noTime():
-    global loopCount, currentUnit, currentState
-    loopCount += 1
-    currentUnit += 1
-    currentState = "studying"
-    studyTimer()
-
-
-window.setGeometry(900, 700, 500, 15)
-boxLayout.addWidget(inputBox)
-window.setLayout(boxLayout)
-
-inputBox.returnPressed.connect(inputProcessing)
-
-displayText("What is the course you want to study?")
-
-window.show()
-sys.exit(app.exec())
+    def get_input(self):
+        """Display the dialog modally and return the entered text."""
+        self.exec()
+        return self.user_input

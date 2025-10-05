@@ -1,19 +1,18 @@
 import os
-from multiprocessing import Process
 import tkinter as tk
 from PIL import Image, ImageTk
-import matplotlib
-matplotlib.use('QtAgg')
-import matplotlib.pyplot as plt
+# import matplotlib
+# matplotlib.use('QtAgg')
+# import matplotlib.pyplot as plt
 
-# TeX settings for output window
-plt.rcParams["text.usetex"] = True
-plt.rcParams['toolbar'] = 'None'
-fig, ax = plt.subplots()
-ax.axis('off')
-manager = fig.canvas.manager
-manager.set_window_title("Question Time!")
-manager.window.setGeometry(1100, 630, 500, 200)
+# TeX settings for output window -> doesn't work due to threading limitations
+# plt.rcParams["text.usetex"] = True
+# plt.rcParams['toolbar'] = 'None'
+# fig, ax = plt.subplots()
+# ax.axis('off')
+# manager = fig.canvas.manager
+# manager.set_window_title("Question Time!")
+# manager.window.setGeometry(1100, 630, 500, 200)
 
 # tkinter initialization - general settings
 frame_index = 0
@@ -27,10 +26,9 @@ root.attributes('-alpha', 0.5)
 root.geometry("+1780+900")
 
 # load images
-life_path = os.path.join("visuals", "life")
-death_path = os.path.join("visuals", "death")
-tomb_path = os.path.join("visuals", "tomb")
-paths = [life_path, death_path, tomb_path]
+life_path = os.path.join("src", "visuals", "life")
+death_path = os.path.join("src", "visuals", "death")
+paths = [life_path, death_path]
 all_frames = list()
 for i in paths:
     frames = []
@@ -42,13 +40,15 @@ for i in paths:
     all_frames.append(frames)
 fish_frames = all_frames[0]
 death_frames = all_frames[1]
-tomb_frames = all_frames[2]
 label = tk.Label(root, bg=TRANSPARENT_COLOR)
 label.pack()
 
-def display_question(question: str) -> None:
-    ax.text(0.5, 0.5, question, fontsize=20, horizontalalignment='center', verticalalignment='center')
-    plt.show()
+# def display_question(question: str) -> None:
+#     ax.text(0.5, 0.5, question, fontsize=20, horizontalalignment='center', verticalalignment='center')
+#     plt.show()
+
+# def remove_equation() -> None:
+#     plt.close()
     
 # below will be for fish -> needs testing
 def update_life() -> None:
@@ -66,7 +66,10 @@ def update_death() -> None:
     else:
         frame_index = 0
         root.after(frame_delay, root.quit)
+
+def root_start() -> None:
+    root.mainloop()
     
-def stop(root) -> None:
+def stop() -> None:
     if root is not None:
         root.quit()
