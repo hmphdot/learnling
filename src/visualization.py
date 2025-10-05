@@ -16,13 +16,16 @@ from PIL import Image, ImageTk
 
 # tkinter initialization - general settings
 frame_index = 0
+death_index = 0
 frame_delay = 100
+death_delay = 1000
 # tk settings
-TRANSPARENT_COLOR = "black"
 root = tk.Tk()
+root.config(bg="black")
 root.overrideredirect(True)
-root.wm_attributes("-topmost", True)
-root.attributes('-alpha', 0.5)
+root.attributes('-alpha', 0.3)
+root.attributes("-topmost", True)
+root.wm_attributes("-transparentcolor", "black")
 root.geometry("+1780+900")
 
 # load images
@@ -40,7 +43,7 @@ for i in paths:
     all_frames.append(frames)
 fish_frames = all_frames[0]
 death_frames = all_frames[1]
-label = tk.Label(root, bg=TRANSPARENT_COLOR)
+label = tk.Label(root)
 label.pack()
 
 # def display_question(question: str) -> None:
@@ -58,16 +61,18 @@ def update_life() -> None:
     root.after(frame_delay, update_life)
     
 def update_death() -> None:
-    global frame_index
-    label.config(image=death_frames[frame_index])
-    frame_index += 1
-    if frame_index < len(frames):
-        root.after(frame_delay, update_death)
+    global death_index
+    label.config(image=death_frames[death_index])
+    death_index += 1
+    if death_index < len(frames):
+        root.after(death_index, update_death)
     else:
-        frame_index = 0
-        root.after(frame_delay, root.quit)
+        death_index = 0
+        root.after(death_delay, root.quit)
 
 def root_start() -> None:
+    global frame_index
+    frame_index = 0
     root.mainloop()
     
 def stop() -> None:

@@ -1,8 +1,16 @@
+from abc import update_abstractmethods
 from src.ai import generate_question, test_answer
-from src.input_handler import InputDialog, question_dialogue
+from src.input_handler import InputDialog, question_dialogue, correct_dialogue
 from src.visualization import update_life, update_death, root_start, stop
+from src.static import stitchedWindow, spawn_gravestone, show_gravestone, bowl_static_image
 from PyQt6.QtWidgets import QApplication
-import sys, math, threading, time
+import sys, math, threading, time, os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+gravestone_path = os.path.join(BASE_DIR, "src", "visuals", "statics", "gravestone.png")
+image1_path = os.path.join(BASE_DIR, "src", "visuals", "statics", "big_chat.png")
+image2_path = os.path.join(BASE_DIR, "src", "visuals", "statics", "small_chat.png")
+
 
 # initialize settings
 app = QApplication(sys.argv)
@@ -18,11 +26,15 @@ loops = math.ceil(int_time / 25)
 
 # begin 
 # add static stuff
+bowl_image_path = os.path.join(BASE_DIR, "visuals", "statics", "bowl.png")
+bowl_ui = bowl_static_image(bowl_image_path)
 
 def start_question_sequence() -> None:
     print("question sequence started")
+    ui = stitchedWindow(image1_path, image2_path)
+    ui["window"].show()
     unit = ""
-    if len(units) != 0:
+    if len(units) > 1:
         unit = units[0]
         units.pop(0)
     else:
@@ -33,11 +45,15 @@ def start_question_sequence() -> None:
     if not correct: 
         update_death()
         root_start()
-        #implement a wait, and spawn a gravestone
+        grav_ui = show_gravestone(x=1700, y=950)
+        grav_ui["window"].show()
     else:
-        # implement correct scene
-        w = 1
-    studyTimer(10)
+        correct_dialogue.show()
+    threading.Thread(target=studyTimer, args=(20, ), daemon=True).start()
+    update_life()
+    root_start()
+    start_question_sequence()
+    sys.exit(ui["app"].exec())
 
 def studyTimer(secs: int) -> None:
     print("timer started")
@@ -46,7 +62,7 @@ def studyTimer(secs: int) -> None:
 
 def main() -> None:
     while lives > 0:
-        threading.Thread(target=studyTimer, args=(10, ), daemon=True).start()
+        threading.Thread(target=studyTimer, args=(20, ), daemon=True).start()
         update_life()
         root_start()
         start_question_sequence()

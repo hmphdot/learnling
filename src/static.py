@@ -137,6 +137,33 @@ def clear_gravestones():
     for grave in gravestones:
         grave["window"].close()
     gravestones = []
+    
+def bowl_static_image(image_path, x=None, y=None):
+
+    app = QApplication.instance()
+    if not app:
+        raise RuntimeError("QApplication must be created before showing images.")
+
+    window = QWidget()
+    window.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
+    window.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+
+    pixmap = QPixmap(image_path)
+    label = QLabel(window)
+    label.setPixmap(pixmap)
+    window.resize(pixmap.size())
+
+    # Default position → bottom-right corner
+    screen_geometry = app.primaryScreen().availableGeometry()
+    if x is None:
+        x = screen_geometry.width() - pixmap.width() - 20  # 20 px margin
+    if y is None:
+        y = screen_geometry.height() - pixmap.height() - 20
+
+    window.move(x, y)
+    window.show()
+
+    return {"window": window, "label": label, "pixmap": pixmap}
 
 
 if __name__ == "__main__":
