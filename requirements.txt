@@ -1,1 +1,6 @@
-to be determined
+google-genai
+python-dotenv
+black
+matplotlib
+PyQt6
+pillow
