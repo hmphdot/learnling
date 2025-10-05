@@ -1,16 +1,17 @@
 import sys
 import os
 from PyQt6.QtWidgets import QApplication, QLabel, QPushButton, QWidget
-from PyQt6.QtGui import QPixmap, QPainter
+from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt
 
 gravestones = []
 
-def stitchedWindow(image_path1, image_path2):
+def textPanel(image_path):
     """
     Creates a frameless transparent window that stitches two images together vertically.
     Returns a dictionary containing references to all key components.
     """
+    
 
     # Ensure QApplication exists
     app = QApplication.instance()
@@ -21,36 +22,24 @@ def stitchedWindow(image_path1, image_path2):
     window.setWindowFlags(Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowStaysOnTopHint)
     window.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
 
-    # Load and stitch images
-    pixmap1 = QPixmap(image_path1)
-    pixmap2 = QPixmap(image_path2)
-
-    width = max(pixmap1.width(), pixmap2.width())
-    height = pixmap1.height() + pixmap2.height()
-    stitched = QPixmap(width, height)
-    stitched.fill(Qt.GlobalColor.transparent)
-
-    painter = QPainter(stitched)
-    painter.drawPixmap(0, 0, pixmap1)
-    painter.drawPixmap(0, pixmap1.height(), pixmap2)
-    painter.end()
+    pixmap = QPixmap(image_path)
 
     label = QLabel(window)
-    label.setPixmap(stitched)
-    window.resize(stitched.size())
+    label.setPixmap(pixmap)
+    window.resize(pixmap.size())
 
     # Center the window on the screen
     screen_geometry = app.primaryScreen().availableGeometry()
     x = (screen_geometry.width() - window.width()) // 2
     y = (screen_geometry.height() - window.height()) // 2
     window.move(x, y)
-
+    #3EB2FF
     # Exit button
-    exit_button = QPushButton("", window)
+    exit_button = QPushButton("x", window)
     exit_button.setStyleSheet("""
         QPushButton {
             background-color: rgba(255, 0, 0, 0);
-            color: 3EB2FF;
+            color: blue;
             border: none;
             font-weight: bold;
             border-radius: 8px;
@@ -63,9 +52,9 @@ def stitchedWindow(image_path1, image_path2):
     exit_button.move(window.width() - 33, 4)
 
     def on_exit():
-        window.close()       # Close the stitched window
+        window.close()       
         clear_gravestones()  # Close all gravestones
-        app.quit()
+        app.exit()
 
     exit_button.clicked.connect(on_exit)
 
@@ -73,10 +62,7 @@ def stitchedWindow(image_path1, image_path2):
         "app": app,
         "window": window,
         "label": label,
-        "exit_button": exit_button,
-        "stitched_pixmap": stitched,
-        "pixmap1": pixmap1,
-        "pixmap2": pixmap2,
+        "pixmap": pixmap
     }
 
 
@@ -167,20 +153,21 @@ def bowl_static_image(image_path, x=None, y=None):
 
 
 if __name__ == "__main__":
+    app = QApplication(sys.argv)
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-    image1_path = os.path.join(BASE_DIR, "visuals", "statics", "big_chat.png")
-    image2_path = os.path.join(BASE_DIR, "visuals", "statics", "small_chat.png")
+    image_path = os.path.join(BASE_DIR, "visuals", "statics", "big_chat.png")
 
-    if not os.path.exists(image1_path) or not os.path.exists(image2_path):
-        raise FileNotFoundError(f"Cannot find images at:\n{image1_path}\n{image2_path}")
+    if not os.path.exists(image_path) or not os.path.exists(image_path):
+        raise FileNotFoundError(f"Cannot find images at:\n{image_path}\n{image_path}")
 
-    # Show stitched window in the center
-    ui = stitchedWindow(image1_path, image2_path)
+    ui = textPanel(image_path)
     ui["window"].show()
 
-    # Example gravestones
+    bowl_image_path = os.path.join(BASE_DIR, "visuals", "statics", "bowl.png")
+    bowl_ui = bowl_static_image(bowl_image_path)
+
     grav_ui = show_gravestone(x=1400, y=755)
     grav_ui["window"].show()
 
-    sys.exit(ui["app"].exec())
+    sys.exit(app.exec())

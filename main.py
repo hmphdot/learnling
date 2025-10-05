@@ -2,14 +2,13 @@ from abc import update_abstractmethods
 from src.ai import generate_question, test_answer
 from src.input_handler import InputDialog, question_dialogue, correct_dialogue
 from src.visualization import update_life, update_death, root_start, stop
-from src.static import stitchedWindow, spawn_gravestone, show_gravestone, bowl_static_image
+from src.static import textPanel, show_gravestone, bowl_static_image
 from PyQt6.QtWidgets import QApplication
 import sys, math, threading, time, os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 gravestone_path = os.path.join(BASE_DIR, "src", "visuals", "statics", "gravestone.png")
-image1_path = os.path.join(BASE_DIR, "src", "visuals", "statics", "big_chat.png")
-image2_path = os.path.join(BASE_DIR, "src", "visuals", "statics", "small_chat.png")
+image_path = os.path.join(BASE_DIR, "src", "visuals", "statics", "big_chat.png")
 
 
 # initialize settings
@@ -31,7 +30,7 @@ bowl_ui = bowl_static_image(bowl_image_path)
 
 def start_question_sequence() -> None:
     print("question sequence started")
-    ui = stitchedWindow(image1_path, image2_path)
+    ui = textPanel(image_path)
     ui["window"].show()
     unit = ""
     if len(units) > 1:
